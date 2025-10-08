@@ -1,0 +1,26 @@
+﻿@model MyNewApp.Models.Item
+@{
+    ViewData["Title"] = "Overview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var items = new List<string> { "Item1", "Item2", "Item3" };
+}
+
+<h1>Overview</h1>
+<h3> @Model.Name</h3>
+
+<div>
+    <div style="color:white;background-color:black;">
+        Items
+    </div>
+    <div>
+        <ul>
+            @foreach (var a in items)
+            {
+                <li style="float:left;margin-left:25px">@a</li>
+            }
+        </ul>
+    </div>
+</div>
+
+
