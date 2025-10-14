@@ -35,6 +35,7 @@ namespace MyNewApp.Controllers
                 account.FirstName = model.FirstName;
                 account.LastName = model.LastName;
                 account.Username = model.UserName;
+                account.Role = "User";
 
                 try
                 {
@@ -93,7 +94,7 @@ namespace MyNewApp.Controllers
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            return RedirectToAction("Login");
         }
 
         [Authorize]

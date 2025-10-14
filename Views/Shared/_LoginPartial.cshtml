@@ -1,21 +1,16 @@
-﻿@if (Context.User.Identity.Name != null)
+﻿@if (Context.User.Identity != null && Context.User.Identity.IsAuthenticated)
 {
-    <form asp-controller="Account" asp-action="LogOut" method="post" id="logoutForm" class=" navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                Hello @Context.User.Identity.Name!
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log off</button>
-            </li>
-        </ul>
+    <form asp-controller="Account" asp-action="LogOut" method="post" id="logoutForm" class="d-flex align-items-center ms-3">
+        <span class="me-2 fw-semibold text-success">
+            Hello, @Context.User.Identity.Name!
+        </span>
+        <button type="submit" class="btn btn-success btn-sm">Log off</button>
     </form>
-
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a class=" nav-link text-dark" asp-controller="Account" asp-action="Registration">Register</a></li>
-        <li><a class=" nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a></li>
-    </ul>
+    <div class="d-flex align-items-center ms-3">
+        <a class="btn btn-success btn-sm" asp-controller="Account" asp-action="Registration">Register</a>
+        <a class="btn btn-success btn-sm" asp-controller="Account" asp-action="Login">Login</a>
+    </div>
 }

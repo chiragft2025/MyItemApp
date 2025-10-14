@@ -18,23 +18,14 @@ namespace MyNewApp.Controllers
         {
             _context = context;
         }
-        public IActionResult Overview()
-        {
-            var item = new Item()
-            {
-                Name = "Mouse",
-                Price = 25.60
-            };
-            return View(item);
-        }
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
 
-            var items = await _context.Items.Include(s=>s.SerialNumber)
-                                            .Include(i=>i.Category)
+            var items = await _context.Items.Include(s => s.SerialNumber)
+                                            .Include(i => i.Category)
                                             .Include(ic => ic.ItemClients)
-                                            .ThenInclude(c =>c.Client)
+                                            .ThenInclude(c => c.Client)
                                                     .ToListAsync();
             return View(items);
         }
@@ -55,7 +46,7 @@ namespace MyNewApp.Controllers
                 return RedirectToAction("GetItems");
             }
 
-            return View(item); 
+            return View(item);
         }
         [HttpGet]
         public async Task<IActionResult> EditItem(int id)
@@ -82,11 +73,11 @@ namespace MyNewApp.Controllers
             var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
             return View(item);
         }
-        [HttpPost,ActionName("RemoveItem")]
+        [HttpPost, ActionName("RemoveItem")]
         public async Task<IActionResult> RemoveItemconfirm(int id)
         {
             var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
-            if (item!=null)
+            if (item != null)
             {
                 _context.Remove(item);
                 await _context.SaveChangesAsync();

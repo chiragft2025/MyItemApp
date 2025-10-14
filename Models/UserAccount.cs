@@ -32,5 +32,9 @@ namespace MyNewApp.Models
         [Required(ErrorMessage = "Password is Required")]
        
         public string Password { get; set; }
+
+        [Required]
+        [MaxLength(20)]
+        public string Role { get; set; } = "User"; // "Admin" or "User"
     }
 }
