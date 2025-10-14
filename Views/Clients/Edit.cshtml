@@ -1,46 +1,38 @@
 ﻿@model MyNewApp.Models.Client
 
 @{
-    ViewData["Title"] = "Assign Items to " + ViewBag.ClientName;
+    ViewData["Title"] = "Edit Client";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var allItems = ViewBag.AllItems as List<MyNewApp.Models.Item>;
-    var selectedIds = ViewBag.SelectedItemIds as List<int>;
 }
 
-<h1>Assign Items to Client: <strong>@ViewBag.ClientName</strong></h1>
-<hr />
-
 <div class="row">
-    <div class="col-md-6">
-        <form asp-action="EditItems" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Edit Client</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                @foreach (var item in allItems)
-                {
-                    <div class="form-check">
-                        <input type="checkbox"
-                               class="form-check-input"
-                               name="selectedItemIds"
-                               value="@item.Id"
-                               @(selectedIds.Contains(item.Id) ? "checked" : "") />
-                        <label class="form-check-label">
-                            @item.Name (@item.Price ₹)
-                            @if (item.Category != null)
-                            {
-                                <span> - @item.Category.Name</span>
-                            }
-                        </label>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                }
-            </div>
 
-            <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">Save</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>

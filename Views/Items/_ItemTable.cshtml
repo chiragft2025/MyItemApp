@@ -1,0 +1,80 @@
+﻿@model IEnumerable<MyNewApp.Models.Item>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-success">
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Serial</th>
+                        <th>Category</th>
+                        <th>Clients</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Price</td>
+                                <td>@item.SerialNumber?.Name</td>
+                                <td>@item.Category?.Name</td>
+                                <td>
+                                    @foreach (var client in item.ItemClients)
+                                    {
+                                        <span class="badge bg-secondary me-1">@client.Client.Name</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="EditItem" asp-route-id="@item.Id" class="btn btn-outline-success btn-sm me-1" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="GetSIngleItem" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm me-1" title="Details">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <form asp-action="RemoveItem" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Delete this item?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-3">No items found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 🔢 Pagination -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-center my-3">
+                <ul class="pagination">
+                    @{
+                        int currentPage = ViewBag.CurrentPage ?? 1;
+                        int totalPages = ViewBag.TotalPages ?? 1;
+                    }
+
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a href="#" class="page-link" data-page="@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>

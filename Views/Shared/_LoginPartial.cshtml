@@ -1,7 +1,7 @@
 ﻿@if (Context.User.Identity != null && Context.User.Identity.IsAuthenticated)
 {
     <form asp-controller="Account" asp-action="LogOut" method="post" id="logoutForm" class="d-flex align-items-center ms-3">
-        <span class="me-2 fw-semibold text-success">
+        <span class="me-2 fw-semibold text-gold">
             Hello, @Context.User.Identity.Name!
         </span>
         <button type="submit" class="btn btn-success btn-sm">Log off</button>

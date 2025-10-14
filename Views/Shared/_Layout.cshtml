@@ -27,25 +27,46 @@
                             <li class="nav-item">
                                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active text-gold" : "")"
                                    asp-area="" asp-controller="Home" asp-action="Index">
-                                    <i class="bi bi-house-door"></i> Home
+                                    Home
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Items" ? "active text-gold" : "")"
                                    asp-area="" asp-controller="Items" asp-action="GetItems">
-                                     ListAllItems
+                                    ListAllItems
                                 </a>
                             </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Clients" ? "active text-gold" : "")"
+                                       asp-area="" asp-controller="Clients" asp-action="Index">
+                                        Clients
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categories" ? "active text-gold" : "")"
+                                       asp-area="" asp-controller="Categories" asp-action="Index">
+                                        Categories
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SerialNumbers" ? "active text-gold" : "")"
+                                       asp-area="" asp-controller="SerialNumbers" asp-action="Index">
+                                        SerialNumbers
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ItemClients" ? "active text-gold" : "")"
+                                       asp-area="" asp-controller="ItemClients" asp-action="Index">
+                                        ItemClients
+                                    </a>
+                                </li>
+                            }
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Clients" ? "active text-gold" : "")"
-                                   asp-area="" asp-controller="Clients" asp-action="Index">
-                                     Clients
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categories" ? "active text-gold" : "")"
-                                   asp-area="" asp-controller="Categories" asp-action="Index">
-                                     Categories
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" ? "active text-gold" : "")"
+                                   asp-area="" asp-controller="Account" asp-action="Profile">
+                                    Profile
                                 </a>
                             </li>
                         </ul>

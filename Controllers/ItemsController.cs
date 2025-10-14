@@ -19,14 +19,31 @@ namespace MyNewApp.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> GetItems()
+        public async Task<IActionResult> GetItems(string search, int page = 1, int pageSize = 10)
         {
+            var query = _context.Items
+                .Include(s => s.SerialNumber)
+                .Include(i => i.Category)
+                .Include(ic => ic.ItemClients)
+                    .ThenInclude(c => c.Client)
+                .AsQueryable();
 
-            var items = await _context.Items.Include(s => s.SerialNumber)
-                                            .Include(i => i.Category)
-                                            .Include(ic => ic.ItemClients)
-                                            .ThenInclude(c => c.Client)
-                                                    .ToListAsync();
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(i => i.Name.Contains(search));
+            }
+
+            var totalItems = await query.CountAsync();
+            var items = await query
+                .OrderBy(i => i.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.Search = search;
+
             return View(items);
         }
 
@@ -37,7 +54,7 @@ namespace MyNewApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddItems([Bind("Id,Name,Price,CategoryId")] Item item)
+        public async Task<IActionResult> AddItems([Bind("Id,Name,Price,CategoryId,SerialNumber")] Item item)
         {
             if (ModelState.IsValid)
             {
@@ -67,23 +84,27 @@ namespace MyNewApp.Controllers
             }
             return View(item);
         }
-        [HttpGet]
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveItem(int id)
         {
-            var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
-            return View(item);
-        }
-        [HttpPost, ActionName("RemoveItem")]
-        public async Task<IActionResult> RemoveItemconfirm(int id)
-        {
-            var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
-            if (item != null)
+            try
             {
-                _context.Remove(item);
-                await _context.SaveChangesAsync();
+                var item = await _context.Items.FirstOrDefaultAsync(x => x.Id == id);
+                if (item != null)
+                {
+                    _context.Items.Remove(item);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction("GetItems");
             }
-            return View();
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the item." + ex.Message;
+                return RedirectToAction("GetItems");
+            }
+            
         }
 
         public async Task<IActionResult> GetSIngleItem(int id)

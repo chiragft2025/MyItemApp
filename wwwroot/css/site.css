@@ -97,7 +97,8 @@ a:hover {
 }
 .btn-outline-success {
     border-color: #388e3c;
-    color: #fff;
+    color: #388e3c;
+    background-color: transparent;
 }
 .btn-outline-success:hover, .btn-outline-success:focus {
     background-color: #388e3c;

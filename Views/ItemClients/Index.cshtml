@@ -1,0 +1,35 @@
+﻿@model IEnumerable<MyNewApp.Models.ItemClient>
+
+<h1>Item-Client Mappings</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Mapping</a>
+</p>
+@if (!Model.Any())
+{
+    <p class="text-muted">No mappings found. Please create one.</p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Item Name</th>
+                <th>Client Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mapping in Model)
+            {
+                <tr>
+                    <td>@mapping.Item?.Name</td>
+                    <td>@mapping.Client?.Name</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-itemId="@mapping.ItemId" asp-route-clientId="@mapping.ClientId" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

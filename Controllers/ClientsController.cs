@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyNewApp.Data;
 using MyNewApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyNewApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ClientsController : Controller
     {
         private readonly MyAppContext _context;
@@ -26,14 +30,17 @@ namespace MyNewApp.Controllers
         // GET: Clients/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var client = await _context.Clients
-                .Include(c => c.ItemClients)
-                .ThenInclude(ic => ic.Item)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (client == null) return NotFound();
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (client == null)
+            {
+                return NotFound();
+            }
 
             return View(client);
         }
@@ -45,6 +52,8 @@ namespace MyNewApp.Controllers
         }
 
         // POST: Clients/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Client client)
@@ -61,20 +70,30 @@ namespace MyNewApp.Controllers
         // GET: Clients/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var client = await _context.Clients.FindAsync(id);
-            if (client == null) return NotFound();
-
+            if (client == null)
+            {
+                return NotFound();
+            }
             return View(client);
         }
 
         // POST: Clients/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Client client)
         {
-            if (id != client.Id) return NotFound();
+            if (id != client.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -85,8 +104,14 @@ namespace MyNewApp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClientExists(client.Id)) return NotFound();
-                    else throw;
+                    if (!ClientExists(client.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -96,11 +121,17 @@ namespace MyNewApp.Controllers
         // GET: Clients/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var client = await _context.Clients
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (client == null) return NotFound();
+            if (client == null)
+            {
+                return NotFound();
+            }
 
             return View(client);
         }
@@ -114,64 +145,12 @@ namespace MyNewApp.Controllers
             if (client != null)
             {
                 _context.Clients.Remove(client);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        // ================== Many-to-Many: Assign Items to Client ==================
-
-        // GET: Clients/EditItems/5
-        public async Task<IActionResult> EditItems(int id)
-        {
-            var client = await _context.Clients
-                .Include(c => c.ItemClients)
-                .ThenInclude(ic => ic.Item)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (client == null) return NotFound();
-
-            ViewBag.AllItems = await _context.Items.ToListAsync();
-            ViewBag.SelectedItemIds = client.ItemClients.Select(ic => ic.ItemId).ToList();
-            ViewBag.ClientName = client.Name;
-
-            return View(client);
-        }
-
-        // POST: Clients/EditItems/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditItems(int id, List<int> selectedItemIds)
-        {
-            var client = await _context.Clients
-                .Include(c => c.ItemClients)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (client == null) return NotFound();
-
-            // Remove all existing item links
-            client.ItemClients.Clear();
-
-            // Add new links
-            if (selectedItemIds != null)
-            {
-                foreach (var itemId in selectedItemIds)
-                {
-                    client.ItemClients.Add(new ItemClient
-                    {
-                        ClientId = id,
-                        ItemId = itemId
-                    });
-                }
             }
 
             await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Index));
         }
 
-        // ================== Helper ==================
         private bool ClientExists(int id)
         {
             return _context.Clients.Any(e => e.Id == id);
