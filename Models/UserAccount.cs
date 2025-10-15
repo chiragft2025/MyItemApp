@@ -24,7 +24,7 @@ namespace MyNewApp.Models
         
         public string Email { get; set; }
 
-        [MaxLength(20, ErrorMessage = "Max 50 character is allowed")]
+        [MaxLength(50, ErrorMessage = "Max 50 character is allowed")]
         [Required(ErrorMessage = "Username is Required")]
         public string Username { get; set; }
 
@@ -35,6 +35,6 @@ namespace MyNewApp.Models
 
         [Required]
         [MaxLength(20)]
-        public string Role { get; set; } = "User"; // "Admin" or "User"
+        public string Role { get; set; } // "Admin" or "User"
     }
 }

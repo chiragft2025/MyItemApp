@@ -150,6 +150,11 @@ namespace MyNewApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditProfile(UserAccount model)
         {
+            ViewBag.Roles = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Admin", Text = "Admin" },
+                new SelectListItem { Value = "User", Text = "User" }
+            };
             if (ModelState.IsValid)
             {
                 var user = _context.UserAccounts.FirstOrDefault(u => u.Id == model.Id);

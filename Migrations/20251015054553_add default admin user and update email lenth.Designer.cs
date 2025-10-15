@@ -11,8 +11,8 @@ using MyNewApp.Data;
 namespace MyNewApp.Migrations
 {
     [DbContext(typeof(MyAppContext))]
-    [Migration("20251013111016_roles is added")]
-    partial class rolesisadded
+    [Migration("20251015054553_add default admin user and update email lenth")]
+    partial class adddefaultadminuserandupdateemaillenth
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,8 +189,8 @@ namespace MyNewApp.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 

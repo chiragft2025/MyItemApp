@@ -6,7 +6,7 @@ namespace MyNewApp.Models
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Username or Email is required.")]
-        [MaxLength(20, ErrorMessage = "max 20 characters allowed")]
+        [MaxLength(50, ErrorMessage = "max 20 characters allowed")]
         [DisplayName("Username or Email")]
         public string UserName { get; set; }
 
